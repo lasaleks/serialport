@@ -133,25 +133,6 @@ type Port struct {
 	f *os.File
 }
 
-func (p *Port) Wait(timeout int64) int {
-	var tv unix.Timeval
-	tv.Sec = timeout / 1000
-	tv.Usec = (timeout - tv.Sec*1000) * 1000
-
-	var rfds unix.FdSet
-	rfds.Zero()
-	rfds.Set(int(p.f.Fd()))
-	ret, err := unix.Select(int(p.f.Fd())+1, &rfds, nil, nil, &tv)
-	//fmt.Printf("select %d %s\n", ret, err)
-	if err != nil {
-		return 0
-	} else if ret <= 0 {
-		return 0
-	}
-
-	return 1
-}
-
 func (p *Port) Read(b []byte) (n int, err error) {
 	return p.f.Read(b)
 }
