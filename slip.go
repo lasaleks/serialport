@@ -18,13 +18,6 @@ const (
 	ESC_ESC   = 0xDD // ESC ESC_ESC means ESC data byte
 )
 
-const (
-	SLIP_SPECIAL_BYTE_END = 0xC0
-	SLIP_SPECIAL_BYTE_ESC = 0xDB
-	SLIP_ESCAPED_BYTE_END = 0xDC
-	SLIP_ESCAPED_BYTE_ESC = 0xDD
-)
-
 /*
 #define SLIP_END     0xC0
 #define SLIP_ESC     0xDB
@@ -71,74 +64,9 @@ func SlipWrite(ch_i ChannelI, buf []byte) (int, error) {
 	return ch_i.Write(write_buf[:out_len])
 }
 
-const (
-	SLIP_NO_ERROR = 0
-	SLIP_ERROR_BUFFER_OVERFLOW
-	SLIP_ERROR_UNKNOWN_ESCAPED_BYTE
-	SLIP_ERROR_CRC_MISMATCH
-)
-
-const {
-	SLIP_STATE_NORMAL = 0,
-	SLIP_STATE_ESCAPED
-}
-
 type Slip struct {
 	read_cache_buf     [BUF_SIZE]byte
 	len_read_cahce_buf int
-	size int
-	state              int
-}
-
-func (s *Slip) reset_rx(value byte) error {
-}
-
-func (s *Slip) put_byte_to_buffer(value byte) error {
-
-}
-
-func (s *Slip) ReadByte(value byte) error {
-	var err error
-	switch(s.state) {
-	case SLIP_STATE_NORMAL:
-			switch (value) {
-			case SLIP_SPECIAL_BYTE_END:
-					if (s.size >= 2) {
-							//slip->descriptor->recv_message(slip->descriptor->buf,slip->size);
-							fmt.Prntf("")
-					}                        
-					reset_rx(slip);
-				break;
-			case SLIP_SPECIAL_BYTE_ESC:
-					slip.state = SLIP_STATE_ESCAPED;
-				break;
-			default:
-					err = put_byte_to_buffer(slip, byte);
-				break;
-			}
-		break
-	case SLIP_STATE_ESCAPED:
-			switch (byte) {
-			case SLIP_ESCAPED_BYTE_END:
-				byte = SLIP_SPECIAL_BYTE_END;
-				break;
-			case SLIP_ESCAPED_BYTE_ESC:
-				byte = SLIP_SPECIAL_BYTE_ESC;
-				break;
-			default:
-				error = SLIP_ERROR_UNKNOWN_ESCAPED_BYTE;
-				reset_rx(slip);
-				break;
-			}
-
-			if (error != SLIP_NO_ERROR) {
-				break
-			}
-
-			err = put_byte_to_buffer(slip, byte);
-		break
-	}
-	return err
 }
 
 func (s *Slip) SlipRead(ch_i ChannelI, buf []byte, e int) (int, int, error) {
