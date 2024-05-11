@@ -45,7 +45,7 @@ func (s *Slip2) reset_rx() {
 
 func (s *Slip2) put_byte_to_buffer(value byte) error {
 	var err error
-	if s.size >= BUF_SIZE {
+	if s.size >= len(s.buf) {
 		err = ErrBufferOverflow
 		s.reset_rx()
 	} else {
@@ -105,14 +105,15 @@ func NewSlipWriteByte(size_buf int, send_message func(buf []byte, size int)) *Sl
 	}
 }
 
-func (s *SlipWriteByte) reset_tx() {
+func (s *SlipWriteByte) Reset() {
+	s.size = 0
 }
 
 func (s *SlipWriteByte) put_byte_to_buffer(value byte) error {
 	var err error
-	if s.size >= BUF_SIZE {
+	if s.size >= len(s.buf) {
 		err = ErrBufferOverflow
-		s.reset_tx()
+		s.Reset()
 	} else {
 		s.buf[s.size] = value
 		s.state = SLIP_STATE_NORMAL
@@ -149,5 +150,6 @@ func (s *SlipWriteByte) WriteEnd(value byte) (err error) {
 		return err
 	}
 	s.send_message(s.buf, s.size)
+	s.Reset()
 	return
 }
