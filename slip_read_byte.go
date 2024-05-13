@@ -24,26 +24,26 @@ const (
 var ErrBufferOverflow = errors.New("SLIP_ERROR_BUFFER_OVERFLOW")
 var ErrUnknownEscapedByte = errors.New("SLIP_ERROR_UNKNOWN_ESCAPED_BYTE")
 
-type Slip2 struct {
+type SlipReadByte struct {
 	buf          []byte
 	size         int
 	state        int
 	recv_message func(buf []byte, size int)
 }
 
-func NewSlip2(size_buf int, recv_msg func(buf []byte, size int)) *Slip2 {
-	return &Slip2{
+func NewSlipReadByte(size_buf int, recv_msg func(buf []byte, size int)) *SlipReadByte {
+	return &SlipReadByte{
 		buf:          make([]byte, size_buf),
 		recv_message: recv_msg,
 	}
 }
 
-func (s *Slip2) reset_rx() {
+func (s *SlipReadByte) reset_rx() {
 	s.state = SLIP_STATE_NORMAL
 	s.size = 0
 }
 
-func (s *Slip2) put_byte_to_buffer(value byte) error {
+func (s *SlipReadByte) put_byte_to_buffer(value byte) error {
 	var err error
 	if s.size >= len(s.buf) {
 		err = ErrBufferOverflow
@@ -56,7 +56,7 @@ func (s *Slip2) put_byte_to_buffer(value byte) error {
 	return err
 }
 
-func (s *Slip2) Readbyte(value byte) error {
+func (s *SlipReadByte) Readbyte(value byte) error {
 	var err error
 	switch s.state {
 	case SLIP_STATE_NORMAL:
