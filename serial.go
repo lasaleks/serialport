@@ -32,13 +32,14 @@ const (
 //
 // For example:
 //
-//    c0 := &serial.Config{Name: "COM45", Baud: 115200, ReadTimeout: time.Millisecond * 500}
-// or
-//    c1 := new(serial.Config)
-//    c1.Name = "/dev/tty.usbserial"
-//    c1.Baud = 115200
-//    c1.ReadTimeout = time.Millisecond * 500
+//	c0 := &serial.Config{Name: "COM45", Baud: 115200, ReadTimeout: time.Millisecond * 500}
 //
+// or
+//
+//	c1 := new(serial.Config)
+//	c1.Name = "/dev/tty.usbserial"
+//	c1.Baud = 115200
+//	c1.ReadTimeout = time.Millisecond * 500
 type Config struct {
 	Name        string
 	Baud        int
@@ -68,6 +69,8 @@ var ErrBadStopBits error = errors.New("unsupported stop bit setting")
 
 // ErrBadParity is returned if the parity is not supported.
 var ErrBadParity error = errors.New("unsupported parity setting")
+
+var ErrTimeout error = errors.New("timeout")
 
 // OpenPort opens a serial port with the specified configuration
 func OpenPort(c *Config) (*Port, error) {
