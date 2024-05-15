@@ -146,7 +146,7 @@ func (s *SerialPort) Read(buf []byte, estimated_byte int) (int, error) {
 			time.Sleep(time.Microsecond * time.Duration(s.config_stty.oneSymbolDuration*estimated_byte))
 		}
 		if s.stty.Wait(s.config_stty.wait.Milliseconds()) == 0 {
-			return 0, fmt.Errorf("timeout")
+			return 0, ErrTimeout
 		}
 		l, err := s.stty.Read(buf)
 		if LogPrintData {
